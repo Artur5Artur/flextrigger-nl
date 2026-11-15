@@ -5,11 +5,9 @@ const nextConfig = {
   experimental: {
     cpus: 1,
   },
-  // Отключаем проверку TypeScript при деплое
   typescript: {
     ignoreBuildErrors: true,
   },
-  // Отключаем ошибки ESLint при деплое
   eslint: {
     ignoreDuringBuilds: true,
   },
