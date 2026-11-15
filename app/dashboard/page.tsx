@@ -320,7 +320,7 @@ function LeadCard({
     setEmail(textOrEmpty(lead.contact_email));
     setPitch(textOrEmpty(lead.ai_pitch));
     setStatus(lead.status);
-    setEmailStatus((current) => forwardEmailStatus(current, lead.email_status));
+    setEmailStatus((current) => forwardEmailStatus(current as any, lead.email_status));
   }, [lead.id, lead.contact_person, lead.contact_email, lead.ai_pitch, lead.status, lead.email_status]);
 
   async function save() {
