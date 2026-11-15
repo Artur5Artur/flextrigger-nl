@@ -299,7 +299,7 @@ function LeadCard({
   const [email, setEmail] = useState(textOrEmpty(lead.contact_email));
   const [pitch, setPitch] = useState(textOrEmpty(lead.ai_pitch));
   const [status, setStatus] = useState(lead.status);
-  const [emailStatus, setEmailStatus] = useState(lead.email_status);
+  const [emailStatus, setEmailStatus] = useState<DashboardLead["email_status"]>(lead.email_status);
   const [feedback, setFeedback] = useState<string | null>(null);
   const [busy, setBusy] = useState<"save" | "copy" | "send" | "resend" | "regenerate" | null>(null);
   const sendingRef = useRef(false);
@@ -320,7 +320,7 @@ function LeadCard({
     setEmail(textOrEmpty(lead.contact_email));
     setPitch(textOrEmpty(lead.ai_pitch));
     setStatus(lead.status);
-    setEmailStatus((current) => forwardEmailStatus(current, lead.email_status));
+    setEmailStatus((current): DashboardLead["email_status"] => forwardEmailStatus(current, lead.email_status));
   }, [lead.id, lead.contact_person, lead.contact_email, lead.ai_pitch, lead.status, lead.email_status]);
 
   async function save() {
@@ -662,7 +662,7 @@ function LeadCard({
   );
 }
 
-function forwardEmailStatus(current: string | null, incoming: string | null): EmailTrackingStatus | null {
+function forwardEmailStatus(current: string | null, incoming: string | null): DashboardLead["email_status"] {
   if (!incoming || !isEmailTrackingStatus(incoming)) {
     return current && isEmailTrackingStatus(current) ? current : null;
   }
