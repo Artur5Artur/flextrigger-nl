@@ -662,8 +662,10 @@ function LeadCard({
   );
 }
 
-function forwardEmailStatus(current: string | null, incoming: string | null): string | null {
-  if (!incoming || !isEmailTrackingStatus(incoming)) return current;
+function forwardEmailStatus(current: string | null, incoming: string | null): EmailTrackingStatus | null {
+  if (!incoming || !isEmailTrackingStatus(incoming)) {
+    return current && isEmailTrackingStatus(current) ? current : null;
+  }
   if (!current || !isEmailTrackingStatus(current)) return incoming;
   return nextEmailStatus(current, incoming) ?? current;
 }
