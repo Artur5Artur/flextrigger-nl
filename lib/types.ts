@@ -6,13 +6,15 @@ export type CompanyRecord = {
   created_at: string;
 };
 
+export type LeadEmailStatus = "sent" | "delivered" | "opened" | null;
+
 export type DashboardLead = {
   id: string;
   contact_person: string | null;
   contact_email: string | null;
   ai_pitch: string | null;
   status: string;
-  email_status: "sent" | "delivered" | "opened" | null;
+  email_status: LeadEmailStatus;
   created_at: string;
   vacancy: {
     id: string;

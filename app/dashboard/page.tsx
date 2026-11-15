@@ -7,7 +7,7 @@ import { emailTrackingLabel, isEmailTrackingStatus, nextEmailStatus, type EmailT
 import { formatWhen, leadStatusLabel, sourceLabel } from "@/lib/format";
 import { buildMailto, isValidEmail, splitPitch } from "@/lib/mailto";
 import { PREVIEW_COMPANIES, PREVIEW_LEADS } from "@/lib/preview";
-import type { DashboardLead, DashboardPayload } from "@/lib/types";
+import type { DashboardLead, DashboardPayload, LeadEmailStatus } from "@/lib/types";
 
 const inputClass = "w-full border border-line bg-paper px-3 py-2 text-sm text-ink outline-none";
 const primaryBtn = "bg-ink px-4 py-2.5 text-sm font-semibold text-paper disabled:opacity-50";
@@ -299,7 +299,7 @@ function LeadCard({
   const [email, setEmail] = useState(textOrEmpty(lead.contact_email));
   const [pitch, setPitch] = useState(textOrEmpty(lead.ai_pitch));
   const [status, setStatus] = useState(lead.status);
-  const [emailStatus, setEmailStatus] = useState<DashboardLead["email_status"]>(lead.email_status);
+  const [emailStatus, setEmailStatus] = useState<LeadEmailStatus>(lead.email_status);
   const [feedback, setFeedback] = useState<string | null>(null);
   const [busy, setBusy] = useState<"save" | "copy" | "send" | "resend" | "regenerate" | null>(null);
   const sendingRef = useRef(false);
@@ -320,7 +320,7 @@ function LeadCard({
     setEmail(textOrEmpty(lead.contact_email));
     setPitch(textOrEmpty(lead.ai_pitch));
     setStatus(lead.status);
-    setEmailStatus((current): DashboardLead["email_status"] => forwardEmailStatus(current, lead.email_status));
+    setEmailStatus((current) => forwardEmailStatus(current, lead.email_status));
   }, [lead.id, lead.contact_person, lead.contact_email, lead.ai_pitch, lead.status, lead.email_status]);
 
   async function save() {
@@ -662,15 +662,13 @@ function LeadCard({
   );
 }
 
-function forwardEmailStatus(current: string | null, incoming: string | null): DashboardLead["email_status"] {
-  if (!incoming || !isEmailTrackingStatus(incoming)) {
-    return current && isEmailTrackingStatus(current) ? current : null;
-  }
-  if (!current || !isEmailTrackingStatus(current)) return incoming;
+function forwardEmailStatus(current: LeadEmailStatus, incoming: LeadEmailStatus): LeadEmailStatus {
+  if (!incoming) return current;
+  if (!current) return incoming;
   return nextEmailStatus(current, incoming) ?? current;
 }
 
-function EmailStatusBadge({ status }: { status: string | null }) {
+function EmailStatusBadge({ status }: { status: LeadEmailStatus }) {
   if (!status || !isEmailTrackingStatus(status)) return null;
   const label = emailTrackingLabel(status);
   if (!label) return null;
